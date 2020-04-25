@@ -1,0 +1,28 @@
+/*
+ * Kaminari
+ *
+ * Copyright (C) 2020 Richard "Shred" Körber
+ *   https://github.com/shred/kaminari
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+// The name of your WLAN
+#define MY_SSID "HomeSweetHome"
+
+// Your WLAN's password
+#define MY_PSK "mYsEcReTpAsSwOrD"
+
+// A random API key to protect your lightning detector from unauthorized access
+#define MY_APIKEY "mYsEcReTaPiKeY"
+
+// The MDNS name of your detector
+#define MY_MDNS_NAME "kaminari"
