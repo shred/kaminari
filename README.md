@@ -4,6 +4,15 @@ This is an ESP8266 and AS3935 based Franklin Lightning Detector. It connects to 
 
 **WARNING: This project is for educational purposes only.** This is just a toy. It is not intended to be used as an early warning indicator for lightning related storms. It does not guarantee accuracy or predict exact strike locations. It it not a replacement for a professional lightning detector. Again: **This is just a toy.**
 
+## Features
+
+* Small size and low power consumption
+* Can be read out and configured via HTTP web service and JSON
+* Optional RGBW LED for showing the system status and detected lightnings
+* Self-calibrating detector
+* Permanent automatic noise floor level adjustment
+* Comes with instructions for a pyramid shaped [3D printed case](case/README.md)
+
 ## Building and Installation
 
 ![Prototype](as3935.jpg)

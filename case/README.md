@@ -61,7 +61,7 @@ All four parts should be printed in the original orientation. For best results, 
 
 * If not done already, connect the ESP8266 to your computer and flash the _Kaminari_ firmware.
 * Solder wires to the LED board. Put the board on top of the LED holder, with the wires passing the hole. You can use a bit of glue if the LED board won't hold in its place properly.
-* Use two screws to carefully mount the AS3935 to the bottom of the LED board. Do not overtight the screws, to avoid damage to the board.
+* Use two screws to carefully mount the AS3935 to the bottom of the LED board. Do not overtighten the screws, to avoid damage to the board.
 * Place the ESP8266 to the base plate, with the USB connector pointing outside, and the silver ESP8266 module pointing to the bottom.
 * Use wires to connect the AS3935 and the LED board to the ESP8266 board. You can solder the wires to the boards directly, but I recommend to use pin headers. Keep the wires as short as possible, as there is not much space in the pyramid, but of course long enough so it can be assembled later.
 * Check if the wiring is correct, then check again.
@@ -69,7 +69,7 @@ All four parts should be printed in the original orientation. For best results, 
 * Disconnect the ESP8266 from USB.
 * If everything is fine, use the _H-shaped clip_ to lock the ESP8266 in its place. Make sure the wires are routed below the horizontal _H_ bar of the clip.
 * Now put the _LED holder_ on top of the construction. It all should resemble a pyramid shape now. The LED holder does not need to be fixed, because it will be held in place by the pyramid top.
-* Carefully put the _pyramid top_ over the construction. It should fit nicely. If not, find the obstacle and remove it.
+* Carefully put the _pyramid top_ over the construction. It should fit nicely. If not, find the obstacle and remove it. **Make sure the hole for the USB plug is properly aligned to the USB connector.**
 * Use the four remaining screws to fasten the pyramid top to the bottom plate.
 * Stick the four rubber feet to the corners of the bottom plate.
 
