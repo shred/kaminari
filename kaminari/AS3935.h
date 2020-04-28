@@ -118,6 +118,12 @@ public:
     int getNoiseFloorLevel();
 
     /**
+     * Return true if the noise floor level is out of its upper range. The detector is
+     * unable to work properly if this happens.
+     */
+    bool isNoiseFloorLevelOutOfRange() const;
+
+    /**
      * Return the current outdoor mode setting.
      */
     bool getOutdoorMode() const;
@@ -228,6 +234,7 @@ private:
     int noiseLevelBalance;
     int currentNoiseFloorLevel;
     bool currentOutdoorMode;
+    bool noiseFloorLevelOutOfRange;
     Lightning lastLightningDetections[16];
 
     /**

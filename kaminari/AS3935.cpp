@@ -44,6 +44,7 @@ AS3935::AS3935(int csPin, int intPin) {
     this->noiseLevelBalance = 0;
     this->currentNoiseFloorLevel = 0;
     this->currentOutdoorMode = false;
+    this->noiseFloorLevelOutOfRange = false;
     clearDetections();
 }
 
@@ -88,7 +89,9 @@ bool AS3935::update() {
                 if (raiseNoiseFloorLevel()) {
                     Serial.println("Noise floor level was raised");
                     hasChanged = true;
+                    noiseFloorLevelOutOfRange = false;
                 } else {
+                    noiseFloorLevelOutOfRange = true;
                     Serial.println("Noise level is too high, find a different place for the sensor!");
                 }
             }
@@ -120,6 +123,9 @@ bool AS3935::update() {
         Serial.println(noiseLevelBalance);
         lastNoiseLevelChange = now;
         noiseLevelBalance--;
+        if (noiseLevelBalance <= -1) {
+            noiseFloorLevelOutOfRange = false;
+        }
         if (noiseLevelBalance < -1) {
             noiseLevelBalance++;
             if (reduceNoiseFloorLevel()) {
@@ -216,6 +222,10 @@ int AS3935::getNoiseFloorLevel() {
         close();
     }
     return currentNoiseFloorLevel;
+}
+
+bool AS3935::isNoiseFloorLevelOutOfRange() const {
+    return noiseFloorLevelOutOfRange;
 }
 
 bool AS3935::getOutdoorMode() const {

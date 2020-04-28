@@ -223,11 +223,10 @@ void updateColor(unsigned long now) {
 
     // Calculate blue color (noise floor level)
     int blue = 0;
-    int nfl = detector.getNoiseFloorLevel();
-    if (nfl == 146 || nfl == 2000) {
-        blue = now % 1000 <= 500 ? 128 : 0;
+    if (detector.isNoiseFloorLevelOutOfRange()) {
+        blue = now % 1000 <= 500 ? (cfgMgr.config.blueBrightness > 128 ? cfgMgr.config.blueBrightness : 128) : 0;
     } else {
-        blue = nfl * cfgMgr.config.blueBrightness / (detector.getOutdoorMode() ? 1800 : 130);
+        blue = detector.getNoiseFloorLevel() * cfgMgr.config.blueBrightness / (detector.getOutdoorMode() ? 2000 : 146);
     }
 
     // Calculate lightning age (white) and distance (green to red)
