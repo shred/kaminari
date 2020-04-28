@@ -146,9 +146,9 @@ Returns the current settings of the detector as JSON structure, for example:
 This endpoint permits to change the settings. Settings to be changed are passed as URL parameter:
 
 - `outdoorMode`: Enable or disable the outdoor mode.
-- `watchdogThreshold`: Watchdog threshold, between 0 and 15, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
+- `watchdogThreshold`: Watchdog threshold, between 0 and 10, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `minimumNumberOfLightning`: Minimum number of lightnings until a lightning detected event is triggered. Only 1, 5, 9, and 16 are permitted, other values will be ignored.
-- `spikeRejection`: Spike rejection, between 0 and 15, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
+- `spikeRejection`: Spike rejection, between 0 and 11, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `statusLed`: Change the status LED operation.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings and system states are still indicated.
 

@@ -136,7 +136,7 @@ void handleUpdate() {
     if (authenticated()) {
         if (server.hasArg("watchdogThreshold")) {
             long val = String(server.arg("watchdogThreshold")).toInt();
-            if (val >= 0 && val <= 15) {
+            if (val >= 0 && val <= 10) {
                 cfgMgr.config.watchdogThreshold = val;
                 detector.setWatchdogThreshold(val);
             }
@@ -152,7 +152,7 @@ void handleUpdate() {
 
         if (server.hasArg("spikeRejection")) {
             long val = String(server.arg("spikeRejection")).toInt();
-            if (val >= 0 && val <= 15) {
+            if (val >= 0 && val <= 11) {
                 cfgMgr.config.spikeRejection = val;
                 detector.setSpikeRejection(val);
             }
