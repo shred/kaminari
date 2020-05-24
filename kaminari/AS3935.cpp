@@ -156,7 +156,7 @@ void AS3935::reset() {
 unsigned long AS3935::calibrate(unsigned long freq) {
     open();
     if (spiRead(0x00) & 0x37 == 0x00) {
-        Serial.println("No AS3935 was detected. Please check your wiring!");
+        Serial.println("The AS3935 does not respond. Please check your SPI wiring!");
     }
 
     spiWrite(0x03, 0xC0);       // Set division ratio to 128
@@ -174,10 +174,8 @@ unsigned long AS3935::calibrate(unsigned long freq) {
     }
 
     if (actualFreq == 0) {
-        Serial.println("No interrupt detected during calibration. Please check your wiring!");
-    }
-
-    if (actualFreq < 483092 || actualFreq > 517500) {
+        Serial.println("No interrupt was detected during calibration. Please check your IRQ wiring!");
+    } else if (actualFreq < 483092 || actualFreq > 517500) {
         Serial.println("Warning: calibrated frequency is out of tolerance range.");
     }
 
