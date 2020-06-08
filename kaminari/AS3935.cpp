@@ -21,8 +21,8 @@
 #include "AS3935.h"
 
 #define BITRATE 1400000         // max bitrate is 2 MHz, should not be dividable by 500 kHz
-#define NOISE_LEVEL_RAISE_DELAY      60000  // Delay before noise level can be raised again
-#define NOISE_LEVEL_REDUCTION_DELAY 600000  // Delay before noise reduction is lowered again
+#define DEFAULT_ACCEPTABLE_ERRORS 100
+#define NOISE_LEVEL_CHECK_PERIOD 10000
 
 const int outdoorLevels[]   = { 390,  630,  860, 1100, 1140, 1570, 1800, 2000 };
 const int indoorLevels[]    = {  28,   45,   62,   78,   95,  112,  130,  146 };
@@ -39,9 +39,9 @@ AS3935::AS3935(int csPin, int intPin) {
     this->csPin = csPin;
     this->intPin = intPin;
     this->frequency = 0;
-    this->lastNoiseLevelChange = millis();
-    this->lastNoiseLevelRaise = millis();
-    this->noiseLevelBalance = 0;
+    this->acceptableNoiseLevelErrors = DEFAULT_ACCEPTABLE_ERRORS;
+    this->noiseLevelErrorCounter = 0;
+    this->nextNoiseLevelCheck = millis() + NOISE_LEVEL_CHECK_PERIOD;
     this->currentNoiseFloorLevel = 0;
     this->currentOutdoorMode = false;
     this->noiseFloorLevelOutOfRange = false;
@@ -77,24 +77,9 @@ bool AS3935::update() {
         char interrupt = spiRead(0x03) & 0x0F;
         close();
 
-        if ((interrupt & 0x01) != 0 && (now - lastNoiseLevelRaise) > NOISE_LEVEL_RAISE_DELAY) {
+        if ((interrupt & 0x01) != 0) {
             // Noise level too high
-            lastNoiseLevelChange = now;
-            lastNoiseLevelRaise = now;
-            Serial.print("- noise level interrupt, balance=");      // DEBUG
-            Serial.println(noiseLevelBalance);
-            noiseLevelBalance++;
-            if (noiseLevelBalance > 1) {
-                noiseLevelBalance--;
-                if (raiseNoiseFloorLevel()) {
-                    Serial.println("Noise floor level was raised");
-                    hasChanged = true;
-                    noiseFloorLevelOutOfRange = false;
-                } else {
-                    noiseFloorLevelOutOfRange = true;
-                    Serial.println("Noise level is too high, find a different place for the sensor!");
-                }
-            }
+            noiseLevelErrorCounter++;
         }
 
         if ((interrupt & 0x04) != 0) {
@@ -117,22 +102,31 @@ bool AS3935::update() {
         }
     }
 
-    // Try to reduce the noise level again
-    if ((now - lastNoiseLevelChange) > NOISE_LEVEL_REDUCTION_DELAY) {
-        Serial.print("- noise level reduction timeout, balance=");      // DEBUG
-        Serial.println(noiseLevelBalance);
-        lastNoiseLevelChange = now;
-        noiseLevelBalance--;
-        if (noiseLevelBalance <= -1) {
-            noiseFloorLevelOutOfRange = false;
-        }
-        if (noiseLevelBalance < -1) {
-            noiseLevelBalance++;
-            if (reduceNoiseFloorLevel()) {
-                hasChanged = true;
-                Serial.println("Noise floor level was reduced");
+    if (nextNoiseLevelCheck < now) {
+        if (noiseLevelErrorCounter > acceptableNoiseLevelErrors) {
+            // Too much noise, raise level
+            if (raiseNoiseFloorLevel()) {
+                Serial.print(noiseLevelErrorCounter);
+                Serial.println(" noise incidents have been detected, raising noise floor level");
+                noiseFloorLevelOutOfRange = false;
+            } else {
+                noiseFloorLevelOutOfRange = true;
+                Serial.println("Noise level is too high, find a different place for the sensor!");
             }
+            hasChanged = true;
+       } else if (noiseLevelErrorCounter < acceptableNoiseLevelErrors / 2) {
+            // Few noise incidents, reduce level
+            if (noiseFloorLevelOutOfRange) {
+                noiseFloorLevelOutOfRange = false;
+            } else if (reduceNoiseFloorLevel()) {
+                Serial.print(noiseLevelErrorCounter);
+                Serial.println(" noise incidents have been detected, reducing noise floor level");
+            }
+            hasChanged = true;
         }
+
+        nextNoiseLevelCheck = now + NOISE_LEVEL_CHECK_PERIOD;
+        noiseLevelErrorCounter = 0;
     }
 
     return hasChanged;
@@ -314,6 +308,16 @@ void AS3935::setSpikeRejection(int rejection) {
     current |= rejection & 0x0F;
     spiWrite(0x02, current);
     close();
+}
+
+unsigned int AS3935::getAcceptableNoiseLevelErrors() const {
+    return acceptableNoiseLevelErrors;
+}
+
+void AS3935::setAcceptableNoiseLevelErrors(int errors) {
+    noiseLevelErrorCounter = 0;
+    nextNoiseLevelCheck = millis() + NOISE_LEVEL_CHECK_PERIOD;
+    acceptableNoiseLevelErrors = errors;
 }
 
 unsigned long AS3935::getFrequency() const {

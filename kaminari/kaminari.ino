@@ -129,6 +129,7 @@ void handleSettings() {
     doc["outdoorMode"] = detector.getOutdoorMode();
     doc["statusLed"] = cfgMgr.config.ledEnabled;
     doc["blueBrightness"] = cfgMgr.config.blueBrightness;
+    doc["acceptableNoiseLevelErrors"] = detector.getAcceptableNoiseLevelErrors();
     sendJsonResponse(doc);
 }
 
@@ -172,6 +173,14 @@ void handleUpdate() {
             long val = String(server.arg("blueBrightness")).toInt();
             if (val >= 0 && val <= 255) {
                 cfgMgr.config.blueBrightness = val;
+            }
+        }
+
+        if (server.hasArg("acceptableNoiseLevelErrors")) {
+            int val = String(server.arg("acceptableNoiseLevelErrors")).toInt();
+            if (val >= 2 && val <= 10000) {
+                cfgMgr.config.acceptableNoiseLevelErrors = val;
+                detector.setAcceptableNoiseLevelErrors(val);
             }
         }
 
@@ -282,6 +291,7 @@ void setup() {
     detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
     detector.setMinimumNumberOfLightning(cfgMgr.config.minimumNumberOfLightning);
     detector.setSpikeRejection(cfgMgr.config.spikeRejection);
+    detector.setAcceptableNoiseLevelErrors(cfgMgr.config.acceptableNoiseLevelErrors);
 
     // Start WiFi
     WiFi.mode(WIFI_STA);
