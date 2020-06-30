@@ -128,8 +128,7 @@ Returns the current settings of the detector as JSON structure, for example:
     "minimumNumberOfLightning": 1,
     "spikeRejection": 2,
     "statusLed": true,
-    "blueBrightness": 48,
-    "acceptableNoiseLevelErrors": 100
+    "blueBrightness": 48
 }
 ```
 
@@ -141,7 +140,6 @@ Returns the current settings of the detector as JSON structure, for example:
 - `spikeRejection`: Current spike rejection, see AS3935 datasheet.
 - `statusLed`: If `true`, the status LED displays signal quality and detected lightnings. If `false`, the status LED will only display important system states (WLAN disconnected, calibration in progress) and is turned off otherwise.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level.
-- `acceptableNoiseLevelErrors`: The number of acceptable noise level errors per 10 seconds.
 
 ### `/update`
 
@@ -153,7 +151,6 @@ This endpoint permits to change the settings. Settings to be changed are passed 
 - `spikeRejection`: Spike rejection, between 0 and 11, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `statusLed`: Change the status LED operation.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings and system states are still indicated.
-- `acceptableNoiseLevelErrors`: The number of acceptable noise level errors per 10 seconds, between 2 and 10000. The default is 100. This value is experimental and depends on your hardware and your environment. Higher values may lead to an increased number of false positives, while lower values may lead to an increased number of false negatives.
 
 The changes are permanently stored and will still be effective after Kaminari had been powered off and on.
 

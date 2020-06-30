@@ -171,23 +171,6 @@ public:
     void setSpikeRejection(int rejection);
 
     /**
-     * Get the number of acceptable noise level errors per 10 seconds.
-     */
-    unsigned int getAcceptableNoiseLevelErrors() const;
-
-    /**
-     * Set the number of acceptable noise level errors per 10 seconds. If more than these
-     * noise level errors are detected, the noise floor level is raised. If less than
-     * half of these noise level errors are detected, the noise floor level is reduced.
-     *
-     * Default is 100. This value is experimental. Higher values may lead to an increased
-     * number of false positives, while lower values may lead to an increased number of
-     * false negatives. You should find the lowest value that still does not lead to false
-     * positives.
-     */
-    void setAcceptableNoiseLevelErrors(int errors);
-
-    /**
      * Read the resonator frequency since last calibration run. If 0, the detector has not
      * been calibrated yet. The frequency was measured and is not 100% accurate.
      */
@@ -246,9 +229,9 @@ private:
     int intPin;
     unsigned long frequency;
     unsigned long lastDisturberDetection;
-    unsigned int acceptableNoiseLevelErrors;
-    unsigned int noiseLevelErrorCounter;
-    unsigned long nextNoiseLevelCheck;
+    unsigned long lastNoiseLevelChange;
+    unsigned long lastNoiseLevelRaise;
+    int noiseLevelBalance;
     int currentNoiseFloorLevel;
     bool currentOutdoorMode;
     bool noiseFloorLevelOutOfRange;
