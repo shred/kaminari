@@ -11,7 +11,6 @@ This is an ESP8266 and AS3935 based Franklin Lightning Detector. It connects to 
 * Optional RGBW LED for showing the system status and detected lightnings
 * Self-calibrating detector
 * Permanent automatic noise floor level adjustment
-* Comes with instructions for a pyramid shaped [3D printed case](case/README.md)
 
 ## Building and Installation
 
@@ -186,10 +185,6 @@ An optional RGBW LED is showing the current status of the device:
 You can frequently poll the `/status` endpoint for lightnings and other sensor values. This can be done either manually or automated.
 
 [Geordi](https://geordi.shredzone.org) is a tool that frequently polls the status and stores the samples in a Postgresql database. It supports Kaminari directly. [Grafana](https://grafana.com/) can be used for visualising the results.
-
-## 3D Printed Case
-
-As a contribution, there is a [3D printed case](case/README.md) included in this project. It's not an universal case, so you might have to modify it to your needs first.
 
 ## FAQ
 
