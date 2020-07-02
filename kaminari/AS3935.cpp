@@ -81,19 +81,17 @@ bool AS3935::update() {
             // Noise level too high
             lastNoiseLevelChange = now;
             lastNoiseLevelRaise = now;
-            Serial.print("- noise level interrupt, balance=");      // DEBUG
-            Serial.println(noiseLevelBalance);
             noiseLevelBalance++;
             if (noiseLevelBalance > 1) {
                 noiseLevelBalance--;
                 if (raiseNoiseFloorLevel()) {
-                    Serial.println("Noise floor level was raised");
-                    hasChanged = true;
                     noiseFloorLevelOutOfRange = false;
+                    Serial.println("Noise floor level was raised");
                 } else {
                     noiseFloorLevelOutOfRange = true;
                     Serial.println("Noise level is too high, find a different place for the sensor!");
                 }
+                hasChanged = true;
             }
         }
 
@@ -101,7 +99,6 @@ bool AS3935::update() {
             // Disturber detected
             lastDisturberDetection = now;
             hasChanged = true;
-            Serial.println("Disturber was detected");       // DEBUG
         }
 
         if ((interrupt & 0x08) != 0) {
@@ -119,17 +116,14 @@ bool AS3935::update() {
 
     // Try to reduce the noise level again
     if ((now - lastNoiseLevelChange) > NOISE_LEVEL_REDUCTION_DELAY) {
-        Serial.print("- noise level reduction timeout, balance=");      // DEBUG
-        Serial.println(noiseLevelBalance);
         lastNoiseLevelChange = now;
         noiseLevelBalance--;
-        if (noiseLevelBalance <= -1) {
-            noiseFloorLevelOutOfRange = false;
-        }
         if (noiseLevelBalance < -1) {
             noiseLevelBalance++;
-            if (reduceNoiseFloorLevel()) {
-                hasChanged = true;
+            hasChanged = true;
+            if (noiseFloorLevelOutOfRange) {
+                noiseFloorLevelOutOfRange = false;
+            } else if (reduceNoiseFloorLevel()) {
                 Serial.println("Noise floor level was reduced");
             }
         }
