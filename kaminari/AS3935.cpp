@@ -90,10 +90,8 @@ bool AS3935::update() {
                 noiseLevelBalance--;
                 if (raiseNoiseFloorLevel()) {
                     noiseFloorLevelOutOfRange = false;
-                    Serial.println("Noise floor level was raised");
                 } else {
                     noiseFloorLevelOutOfRange = true;
-                    Serial.println("Noise level is too high, find a different place for the sensor!");
                 }
                 hasChanged = true;
             }
@@ -115,7 +113,6 @@ bool AS3935::update() {
             lastLightningDetections[0].energy = getEnergy();
             lastLightningDetections[0].distance = getEstimatedDistance();
             hasChanged = true;
-            Serial.println("Lightning was detected");
         }
     }
 
@@ -128,8 +125,8 @@ bool AS3935::update() {
             hasChanged = true;
             if (noiseFloorLevelOutOfRange) {
                 noiseFloorLevelOutOfRange = false;
-            } else if (reduceNoiseFloorLevel()) {
-                Serial.println("Noise floor level was reduced");
+            } else {
+                reduceNoiseFloorLevel();
             }
         }
     }
