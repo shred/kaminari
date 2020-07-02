@@ -171,6 +171,12 @@ This endpoint clears the list of detected lightnings, the age of the last detect
 
 The API key is required for this call.
 
+### `/reset`
+
+This endpoint resets the detector chip. May be useful if the detector cracks up or behaves strangely. This call also includes a calibration and resetting the statistics.
+
+The API key is required for this call.
+
 ## Status LED
 
 An optional RGBW LED is showing the current status of the device:

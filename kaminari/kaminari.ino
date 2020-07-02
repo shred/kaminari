@@ -200,6 +200,18 @@ void handleClear() {
     }
 }
 
+void handleReset() {
+    if (authenticated()) {
+        detector.reset();
+        handleCalibrate();
+        detector.setOutdoorMode(cfgMgr.config.outdoorMode);
+        detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
+        detector.setMinimumNumberOfLightning(cfgMgr.config.minimumNumberOfLightning);
+        detector.setSpikeRejection(cfgMgr.config.spikeRejection);
+        detector.clearStatistics();
+    }
+}
+
 void color(unsigned int color) {
     if (color != currentColor) {
         neopixel.fill(color);
@@ -301,6 +313,7 @@ void setup() {
     server.on("/update", handleUpdate);
     server.on("/calibrate", handleCalibrate);
     server.on("/clear", handleClear);
+    server.on("/reset", handleReset);
     server.onNotFound([]() {
         server.send(404, "text/plain", server.uri() + ": not found\n");
     });
