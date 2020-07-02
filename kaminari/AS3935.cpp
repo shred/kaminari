@@ -36,15 +36,19 @@ ICACHE_RAM_ATTR static void counterISR() {
 
 
 AS3935::AS3935(int csPin, int intPin) {
+    unsigned long now = millis();
     this->csPin = csPin;
     this->intPin = intPin;
     this->frequency = 0;
-    this->lastNoiseLevelChange = millis();
-    this->lastNoiseLevelRaise = millis();
+    this->lastNoiseLevelChange = now;
+    this->lastNoiseLevelRaise = now;
     this->noiseLevelBalance = 0;
     this->currentNoiseFloorLevel = 0;
     this->currentOutdoorMode = false;
     this->noiseFloorLevelOutOfRange = false;
+    this->disturberCounterStart = now;
+    this->disturberCounter = 0;
+
     clearDetections();
 }
 
@@ -98,6 +102,7 @@ bool AS3935::update() {
         if ((interrupt & 0x04) != 0) {
             // Disturber detected
             lastDisturberDetection = now;
+            disturberCounter++;
             hasChanged = true;
         }
 
@@ -335,6 +340,10 @@ unsigned long AS3935::getLastDisturberDetection() const {
     return lastDisturberDetection;
 }
 
+unsigned int AS3935::getDisturbersPerMinute() const {
+    return (60 * 1000L * disturberCounter) / (millis() - disturberCounterStart);
+}
+
 bool AS3935::getLastLightningDetection(int index, Lightning& lightning) const {
     if (index >= 0
             && index < sizeof(lastLightningDetections) / sizeof(Lightning)
@@ -352,6 +361,8 @@ void AS3935::clearDetections() {
     for (int ix = 0; ix < sizeof(lastLightningDetections) / sizeof(Lightning); ix++) {
         lastLightningDetections[ix].time = 0;
     }
+    disturberCounterStart = millis();
+    disturberCounter = 0;
 }
 
 void AS3935::dump(byte* dump) const {

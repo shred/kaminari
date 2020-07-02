@@ -197,6 +197,12 @@ public:
     unsigned long getLastDisturberDetection() const;
 
     /**
+     * Return the number of detected disturbers per minute. The value is cleared when
+     * clearDetections() is invoked.
+     */
+    unsigned int getDisturbersPerMinute() const;
+
+    /**
      * Return one of the last detected lightnings. Lightnings are always returned in
      * descending order, starting from the most recent event.
      * 
@@ -231,8 +237,10 @@ private:
     unsigned long lastDisturberDetection;
     unsigned long lastNoiseLevelChange;
     unsigned long lastNoiseLevelRaise;
+    unsigned long disturberCounterStart;
     int noiseLevelBalance;
     int currentNoiseFloorLevel;
+    int disturberCounter;
     bool currentOutdoorMode;
     bool noiseFloorLevelOutOfRange;
     Lightning lastLightningDetections[16];

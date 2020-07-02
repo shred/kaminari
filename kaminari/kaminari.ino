@@ -115,6 +115,8 @@ void handleStatus() {
         doc["disturberDetectedAge"] = (char*) NULL;
     }
 
+    doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
+
     sendJsonResponse(doc);
 }
 

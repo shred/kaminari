@@ -102,7 +102,8 @@ Returns the current status of the detector as JSON structure. This is an example
     "distance": null,
     "energy": 0,
     "noiseFloorLevel": 146,
-    "disturberDetectedAge": 4241
+    "disturberDetectedAge": 4241,
+    "disturbersPerMinute": 81
 }
 ```
 
@@ -113,6 +114,7 @@ This is the meaning of the individual properties:
 - `energy`: General energy of detected lightnings, with no physical unit. May also contain values caused by disturbers.
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises.
 - `disturberDetectedAge`: Age of the latest detected disturber event, in seconds.
+- `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises.
 
 ### `/settings`
 
@@ -165,7 +167,7 @@ The API key is required for this call.
 
 ### `/clear`
 
-This endpoint clears the list of detected lightnings, and the age of the last detected disturber.
+This endpoint clears the list of detected lightnings, the age of the last detected disturber, and the counter of disturbers per minute.
 
 The API key is required for this call.
 
