@@ -102,7 +102,8 @@ Returns the current status of the detector as JSON structure. This is an example
     "distance": null,
     "energy": 0,
     "noiseFloorLevel": 146,
-    "disturbersPerMinute": 81
+    "disturbersPerMinute": 81,
+    "watchdogThreshold": 1
 }
 ```
 
@@ -113,6 +114,7 @@ This is the meaning of the individual properties:
 - `energy`: General energy of detected lightnings, with no physical unit. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises.
 - `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises.
+- `watchdogThreshold`: Current watchdog threshold. Range is between 0 and 10. Higher values mean lower sensibility against disturbers, but also lower sensibility against very far lightning events.
 
 ### `/settings`
 
@@ -126,6 +128,9 @@ Returns the current settings of the detector as JSON structure, for example:
     "watchdogThreshold": 2,
     "minimumNumberOfLightning": 1,
     "spikeRejection": 2,
+    "upperDisturberThreshold": 100,
+    "lowerDisturberThreshold": 50,
+    "autoWatchdogMode": true,
     "statusLed": true,
     "blueBrightness": 48
 }
@@ -137,6 +142,9 @@ Returns the current settings of the detector as JSON structure, for example:
 - `watchdogThreshold`: Current watchdog threshold, see AS3935 datasheet.
 - `minimumNumberOfLightning`: Minimum number of lightnings until a lightning detected event is triggered.
 - `spikeRejection`: Current spike rejection, see AS3935 datasheet.
+- `upperDisturberThreshold`: Upper disturber per minute threshold. If exceeded, and auto watchdog mode is enabled, the watchdog threshold is raised.
+- `lowerDisturberThreshold`: Lower disturber per minute threshold. If exceeded, and auto watchdog mode is enabled, the watchdog threshold is reduced.
+- `autoWatchdogMode`: If enabled, Kaminari automatically controls the watchdog threshold depending on the number of disturber events per minute.
 - `statusLed`: If `true`, the status LED displays signal quality and detected lightnings. If `false`, the status LED will only display important system states (WLAN disconnected, calibration in progress) and is turned off otherwise.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level.
 
@@ -148,6 +156,9 @@ This endpoint permits to change the settings. Settings to be changed are passed 
 - `watchdogThreshold`: Watchdog threshold, between 0 and 10, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `minimumNumberOfLightning`: Minimum number of lightnings until a lightning detected event is triggered. Only 1, 5, 9, and 16 are permitted, other values will be ignored.
 - `spikeRejection`: Spike rejection, between 0 and 11, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
+- `upperDisturberThreshold`: Upper disturber per minute threshold. If exceeded, and auto watchdog mode is enabled, the watchdog threshold is raised. Must be positive and higher than `lowerDisturberThreshold`.
+- `lowerDisturberThreshold`: Lower disturber per minute threshold. If exceeded, and auto watchdog mode is enabled, the watchdog threshold is reduced. Must be positive and lower than `upperDisturberThreshold`.
+- `autoWatchdogMode`: If enabled, Kaminari automatically controls the watchdog threshold depending on the number of disturber events per minute.
 - `statusLed`: Change the status LED operation.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings and system states are still indicated.
 

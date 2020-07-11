@@ -108,6 +108,7 @@ void handleStatus() {
     doc["energy"] = detector.getEnergy();
     doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
     doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
+    doc["watchdogThreshold"] = detector.getWatchdogThreshold();
 
     sendJsonResponse(doc);
 }
@@ -121,6 +122,9 @@ void handleSettings() {
     doc["minimumNumberOfLightning"] = detector.getMinimumNumberOfLightning();
     doc["spikeRejection"] = detector.getSpikeRejection();
     doc["outdoorMode"] = detector.getOutdoorMode();
+    doc["upperDisturberThreshold"] = detector.getUpperDisturberThreshold();
+    doc["lowerDisturberThreshold"] = detector.getLowerDisturberThreshold();
+    doc["autoWatchdogMode"] = detector.isAutoWatchdogMode();
     doc["statusLed"] = cfgMgr.config.ledEnabled;
     doc["blueBrightness"] = cfgMgr.config.blueBrightness;
     sendJsonResponse(doc);
@@ -156,6 +160,28 @@ void handleUpdate() {
             bool val = String(server.arg("outdoorMode")) == "true";
             cfgMgr.config.outdoorMode = val;
             detector.setOutdoorMode(val);
+        }
+
+        if (server.hasArg("upperDisturberThreshold")) {
+            long val = String(server.arg("upperDisturberThreshold")).toInt();
+            if (val >= 0 && val <= 10000) {
+                cfgMgr.config.upperDisturberThreshold = val;
+                detector.setUpperDisturberThreshold(val);
+            }
+        }
+
+        if (server.hasArg("lowerDisturberThreshold")) {
+            long val = String(server.arg("lowerDisturberThreshold")).toInt();
+            if (val >= 0 && val <= 10000) {
+                cfgMgr.config.lowerDisturberThreshold = val;
+                detector.setLowerDisturberThreshold(val);
+            }
+        }
+
+        if (server.hasArg("autoWatchdogMode")) {
+            bool val = String(server.arg("autoWatchdogMode")) == "true";
+            cfgMgr.config.autoWatchdogMode = val;
+            detector.setAutoWatchdogMode(val);
         }
 
         if (server.hasArg("statusLed")) {
@@ -196,12 +222,19 @@ void handleReset() {
     if (authenticated()) {
         detector.reset();
         handleCalibrate();
-        detector.setOutdoorMode(cfgMgr.config.outdoorMode);
-        detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
-        detector.setMinimumNumberOfLightning(cfgMgr.config.minimumNumberOfLightning);
-        detector.setSpikeRejection(cfgMgr.config.spikeRejection);
+        setupDetector();
         detector.clearStatistics();
     }
+}
+
+void setupDetector() {
+    detector.setOutdoorMode(cfgMgr.config.outdoorMode);
+    detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
+    detector.setMinimumNumberOfLightning(cfgMgr.config.minimumNumberOfLightning);
+    detector.setSpikeRejection(cfgMgr.config.spikeRejection);
+    detector.setUpperDisturberThreshold(cfgMgr.config.upperDisturberThreshold);
+    detector.setLowerDisturberThreshold(cfgMgr.config.lowerDisturberThreshold);
+    detector.setAutoWatchdogMode(cfgMgr.config.autoWatchdogMode);
 }
 
 void color(unsigned int color) {
@@ -284,10 +317,7 @@ void setup() {
     color(COLOR_BLACK);
 
     // Set up the detector
-    detector.setOutdoorMode(cfgMgr.config.outdoorMode);
-    detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
-    detector.setMinimumNumberOfLightning(cfgMgr.config.minimumNumberOfLightning);
-    detector.setSpikeRejection(cfgMgr.config.spikeRejection);
+    setupDetector();
 
     // Start WiFi
     WiFi.mode(WIFI_STA);
