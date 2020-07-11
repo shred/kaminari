@@ -299,7 +299,7 @@ private:
     bool currentOutdoorMode;
     bool noiseFloorLevelOutOfRange;
     bool autoWatchdogThreshold;
-    Lightning lastLightningDetections[16];
+    Lightning lastLightningDetections[64];
 
     /**
      * Open the connection to the detector.

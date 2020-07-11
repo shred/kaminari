@@ -77,7 +77,7 @@ bool authenticated() {
 }
 
 void handleStatus() {
-    DynamicJsonDocument doc(4096);
+    DynamicJsonDocument doc(8192);
 
     unsigned long now = millis();
 
