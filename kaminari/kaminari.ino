@@ -107,14 +107,6 @@ void handleStatus() {
     
     doc["energy"] = detector.getEnergy();
     doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
-
-    unsigned long disturber = detector.getLastDisturberDetection();
-    if (disturber > 0) {
-        doc["disturberDetectedAge"] = timeDifference(now, disturber) / 1000;
-    } else {
-        doc["disturberDetectedAge"] = (char*) NULL;
-    }
-
     doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
 
     sendJsonResponse(doc);

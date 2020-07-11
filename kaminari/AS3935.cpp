@@ -99,7 +99,6 @@ bool AS3935::update() {
 
         if ((interrupt & 0x04) != 0) {
             // Disturber detected
-            lastDisturberDetection = now;
             disturberCounter++;
             hasChanged = true;
         }
@@ -333,10 +332,6 @@ unsigned int AS3935::getEstimatedDistance() const {
     return distance;
 }
 
-unsigned long AS3935::getLastDisturberDetection() const {
-    return lastDisturberDetection;
-}
-
 unsigned int AS3935::getDisturbersPerMinute() const {
     return (60 * 1000L * disturberCounter) / (millis() - disturberCounterStart);
 }
@@ -354,7 +349,6 @@ bool AS3935::getLastLightningDetection(int index, Lightning& lightning) const {
 }
 
 void AS3935::clearDetections() {
-    lastDisturberDetection = 0;
     for (int ix = 0; ix < sizeof(lastLightningDetections) / sizeof(Lightning); ix++) {
         lastLightningDetections[ix].time = 0;
     }

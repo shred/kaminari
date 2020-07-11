@@ -190,13 +190,6 @@ public:
     unsigned int getEstimatedDistance() const;
 
     /**
-     * Return when a disturber has been detected for the last time. The returned value is
-     * the event timestamp in milliseconds. If 0 is returned, no disturber was detected
-     * yet.
-     */
-    unsigned long getLastDisturberDetection() const;
-
-    /**
      * Return the number of detected disturbers per minute. The value is cleared when
      * clearDetections() is invoked.
      */
@@ -234,7 +227,6 @@ private:
     int csPin;
     int intPin;
     unsigned long frequency;
-    unsigned long lastDisturberDetection;
     unsigned long lastNoiseLevelChange;
     unsigned long lastNoiseLevelRaise;
     unsigned long disturberCounterStart;
