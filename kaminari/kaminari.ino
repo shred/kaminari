@@ -59,7 +59,7 @@ inline static unsigned long timeDifference(unsigned long now, unsigned long past
     return past > 0 ? (now - past) : 0;
 }
 
-void sendJsonResponse(JsonDocument &doc, int status = 200) {
+void sendJsonResponse(ARDUINOJSON_NAMESPACE::JsonDocument &doc, int status = 200) {
     String json;
     serializeJson(doc, json);
     server.send(status, "application/json", json);
