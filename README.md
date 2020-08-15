@@ -229,6 +229,8 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
   
   Your detector might be located in a place with too many radio noises. Try to find a different place, far away from radio sources (like smartphones or bluetooth devices). You can also try to reduce `watchdogThreshold`, `spikeRejection` or `minimumNumberOfLightning`.
 
+  The ESP8266 WiFi is a strong disturber. Try to give more space between the WiFi antenna and the detector coil, in order to reduce disturbers.
+
   Lightnings are only detected in a radius of up to 40 km. However, lightnings are poorer detected with increasing distance.
 
 - **Are kits or assembled devices available?**
