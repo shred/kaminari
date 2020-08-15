@@ -40,9 +40,13 @@ No other components are required.
 
 To fully understand the functionality of the lightning detector, please read the [AS3935 datasheet](https://ams.com/documents/20143/36005/AS3935_DS000385_1-00.pdf).
 
-Note that some boards that are available out there, are equipped with non-standard parts in the antenna RC. Those boards cannot be tuned to the recommended frequency of exactly 500 kHz, but only to a lower frequency, which however is still within the required tolerance. Kaminari tunes the antenna as close to 500 kHz as possible, but it is not a software fault if the exact frequency is missed.
+### Important Notes
 
-Some manufacturers of the lightning detector print a calibration value on the package. As Kaminari calibrates the detector automatically, the calibration value is not used.
+- The ESP8266's WiFi is disturbing the AS3935 detector, and reducing the quality of lightning detection up to a point where lightnings cannot be detected at all. **Make sure there is sufficient space between both boards!** There should be at least 10 cm between the WiFi antenna and the detector coil. The more space, the better.
+
+* Some manufacturers of the lightning detector print a calibration value on the package. As Kaminari calibrates the detector automatically, the calibration value is not needed.
+
+* Some AS3935 boards are equipped with non-standard parts in the antenna RC, and thus cannot be tuned to the recommended frequency of 500 kHz. If you're lucky, it is still within the required tolerance of ±3.5%. Those boards can be used, but may give inferior results. It is not a fault of Kaminari if the exact frequency is missed. (I got multiple reports about CJMCU boards having this issue, and can confirm it with my own board of this brand.)
 
 ### Firmware
 
