@@ -31,7 +31,7 @@ struct Lightning {
  * noise is detected, the noise floor level is raised automatically. After a while, the
  * noise floor level is lowered again.
  * 
- * The driver collects the time, energy and distance of up to 16 lightning events. After
+ * The driver collects the time, energy and distance of up to 64 lightning events. After
  * that, if another lightning is detected, the oldest event is removed.
  * 
  * All returned times represent the system time (millis()) when the event occured.

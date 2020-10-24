@@ -113,7 +113,7 @@ Returns the current status of the detector as JSON structure. This is an example
 
 This is the meaning of the individual properties:
 
-- `lightnings`: An array of detected lightnings. It contains the `age` of the event (in seconds), the estimated `distance` of the lightning (in kilometers) and the lightning `energy` (no physical unit). Kaminari stores up to 16 lightning events, and returns them in antichronological order. When a 17th event is recorded, the oldest record will automatically be removed from the list. This array is empty if no lightnings have been detected yet.
+- `lightnings`: An array of detected lightnings. It contains the `age` of the event (in seconds), the estimated `distance` of the lightning (in kilometres) and the lightning `energy` (no physical unit). Kaminari stores up to 64 lightning events, and returns them in antichronological order. When a 65th event is recorded, the oldest record will automatically be removed from the list. This array is empty if no lightnings have been detected yet.
 - `distance`: General distance of the storm, in kilometers. `null` means that the storm is out of range, while `1` means that the storm is overhead. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
 - `energy`: General energy of detected lightnings, with no physical unit. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises.
