@@ -244,4 +244,4 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
 
 ## License
 
-_Kaminari_ is open source software. The source code is distributed under the terms of [GNU General Public License (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.en.html).
+_Kaminari_ is open source software. The source code is distributed under the terms of [GNU General Public License (GPLv3+)](https://www.gnu.org/licenses/gpl-3.0.en.html).
