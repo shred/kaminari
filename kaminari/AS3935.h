@@ -33,9 +33,9 @@ struct Lightning {
  * 
  * The driver collects the time, energy and distance of up to 64 lightning events. After
  * that, if another lightning is detected, the oldest event is removed.
- * 
- * All returned times represent the system time (millis()) when the event occured.
- * 
+ *
+ * All returned times represent the system time (millis()) when the event occurred.
+ *
  * Note that for technical reasons, you can only run one instance per microcontroller.
  */
 class AS3935 {
@@ -92,7 +92,7 @@ public:
 
     /**
      * Raise the noise floor level. The detector will be less sensitive to noise, but also
-     * less sensititve to lightning events.
+     * less sensitive to lightning events.
      *
      * Usually the driver takes care of adjusting the noise floor level automatically,
      * so there is no need to invoke this method.
@@ -114,7 +114,7 @@ public:
 
     /**
      * Raise the watchdog threshold. The detector will be less sensitive to disturbers,
-     * but also less sensititve to lightning events.
+     * but also less sensitive to lightning events.
      *
      * If the auto watchdog threshold mode is activated, the driver takes care of
      * adjusting the watchdog threshold automatically, so there is no need to invoke this
@@ -126,7 +126,7 @@ public:
 
     /**
      * Reduces the watchdog threshold. The detector will be more sensitive to disturbers,
-     * but also more sensititve to lightning events.
+     * but also more sensitive to lightning events.
      *
      * If the auto watchdog threshold mode is activated, the driver takes care of
      * adjusting the watchdog threshold automatically, so there is no need to invoke this
@@ -242,7 +242,7 @@ public:
 
     /**
      * Read the estimated distance of the head of the approaching storm. The distance is
-     * returned in kilometers. 1 means that the storm is overhead. 0x3F means that a
+     * returned in kilometres. 1 means that the storm is overhead. 0x3F means that a
      * possible storm is out of range.
      */
     unsigned int getEstimatedDistance() const;
@@ -336,7 +336,7 @@ private:
     void updateNoiseFloorLevel();
 
     /**
-     * Read the current watchdog treshold from the detector, and update the object's
+     * Read the current watchdog threshold from the detector, and update the object's
      * state accordingly.
      */
     void updateWatchdogThreshold();
