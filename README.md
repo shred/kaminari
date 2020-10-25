@@ -113,8 +113,8 @@ Returns the current status of the detector as JSON structure. This is an example
 
 This is the meaning of the individual properties:
 
-- `lightnings`: An array of detected lightnings. It contains the `age` of the event (in seconds), the estimated `distance` of the lightning (in kilometers) and the lightning `energy` (no physical unit). Kaminari stores up to 16 lightning events, and returns them in antichronological order. When a 17th event is recorded, the oldest record will automatically be removed from the list. This array is empty if no lightnings have been detected yet.
-- `distance`: General distance of the storm, in kilometers. `null` means that the storm is out of range, while `1` means that the storm is overhead. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
+- `lightnings`: An array of detected lightnings. It contains the `age` of the event (in seconds), the estimated `distance` of the lightning (in kilometres) and the lightning `energy` (no physical unit). Kaminari stores up to 64 lightning events, and returns them in antichronological order. When a 65th event is recorded, the oldest record will automatically be removed from the list. This array is empty if no lightnings have been detected yet.
+- `distance`: General distance of the storm, in kilometres. `null` means that the storm is out of range, while `1` means that the storm is overhead. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
 - `energy`: General energy of detected lightnings, with no physical unit. May also contain values caused by disturbers. For debugging purposes only, may be removed in a future version.
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises.
 - `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises.
@@ -222,11 +222,11 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
   You can increase sensitivity by reducing `watchdogThreshold` and `spikeRejection`, and then try to simulate lightnings by switching a light switch. I could also simulate lightnings by using a bluetooth mouse close to the sensor.
 
 - **I get a lot of false lightning events.**
-  
+
   You can experiment with the `watchdogThreshold`, `spikeRejection` and `minimumNumberOfLightning` settings. There is not much more that can be done though.
 
 - **Lightnings are not detected.**
-  
+
   Your detector might be located in a place with too many radio noises. Try to find a different place, far away from radio sources (like smartphones or bluetooth devices). You can also try to reduce `watchdogThreshold`, `spikeRejection` or `minimumNumberOfLightning`.
 
   The ESP8266 WiFi is a strong disturber. Try to give more space between the WiFi antenna and the detector coil, in order to reduce disturbers.
@@ -234,7 +234,7 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
   Lightnings are only detected in a radius of up to 40 km. However, lightnings are poorer detected with increasing distance.
 
 - **Are kits or assembled devices available?**
-  
+
   No, at least not that I am aware of.
 
 ## Contribute
@@ -244,4 +244,4 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
 
 ## License
 
-_Kaminari_ is open source software. The source code is distributed under the terms of [GNU General Public License (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.en.html).
+_Kaminari_ is open source software. The source code is distributed under the terms of [GNU General Public License (GPLv3+)](https://www.gnu.org/licenses/gpl-3.0.en.html).

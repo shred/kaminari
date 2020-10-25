@@ -26,16 +26,16 @@ struct Lightning {
 
 /**
  * Driver for an AS3935 Franklin Lightning Detector connected via SPI.
- * 
+ *
  * The driver takes care for automatic adjustment of the noise floor level. If too much
  * noise is detected, the noise floor level is raised automatically. After a while, the
  * noise floor level is lowered again.
- * 
- * The driver collects the time, energy and distance of up to 16 lightning events. After
+ *
+ * The driver collects the time, energy and distance of up to 64 lightning events. After
  * that, if another lightning is detected, the oldest event is removed.
- * 
- * All returned times represent the system time (millis()) when the event occured.
- * 
+ *
+ * All returned times represent the system time (millis()) when the event occurred.
+ *
  * Note that for technical reasons, you can only run one instance per microcontroller.
  */
 class AS3935 {
@@ -62,7 +62,7 @@ public:
     /**
      * Update the detector status. This method should be invoked frequently, e.g. in
      * loop().
-     * 
+     *
      * @return true if something has changed, false if nothing happened
      */
     bool update();
@@ -92,11 +92,11 @@ public:
 
     /**
      * Raise the noise floor level. The detector will be less sensitive to noise, but also
-     * less sensititve to lightning events.
+     * less sensitive to lightning events.
      *
      * Usually the driver takes care of adjusting the noise floor level automatically,
      * so there is no need to invoke this method.
-     * 
+     *
      * @return true if the level could be raised, false if the upper limit was reached.
      */
     bool raiseNoiseFloorLevel();
@@ -107,14 +107,14 @@ public:
      *
      * Usually the driver takes care of adjusting the noise floor level automatically,
      * so there is no need to invoke this method.
-     * 
+     *
      * @return true if the level could be reduced, false if the lower limit was reached.
      */
     bool reduceNoiseFloorLevel();
 
     /**
      * Raise the watchdog threshold. The detector will be less sensitive to disturbers,
-     * but also less sensititve to lightning events.
+     * but also less sensitive to lightning events.
      *
      * If the auto watchdog threshold mode is activated, the driver takes care of
      * adjusting the watchdog threshold automatically, so there is no need to invoke this
@@ -126,7 +126,7 @@ public:
 
     /**
      * Reduces the watchdog threshold. The detector will be more sensitive to disturbers,
-     * but also more sensititve to lightning events.
+     * but also more sensitive to lightning events.
      *
      * If the auto watchdog threshold mode is activated, the driver takes care of
      * adjusting the watchdog threshold automatically, so there is no need to invoke this
@@ -242,7 +242,7 @@ public:
 
     /**
      * Read the estimated distance of the head of the approaching storm. The distance is
-     * returned in kilometers. 1 means that the storm is overhead. 0x3F means that a
+     * returned in kilometres. 1 means that the storm is overhead. 0x3F means that a
      * possible storm is out of range.
      */
     unsigned int getEstimatedDistance() const;
@@ -256,7 +256,7 @@ public:
     /**
      * Return one of the last detected lightnings. Lightnings are always returned in
      * descending order, starting from the most recent event.
-     * 
+     *
      * @param index     Index number of lightning detection, starting with 0
      * @param lightning Target structure
      * @return true if the target structure was filled with lightning data, false if
@@ -271,7 +271,7 @@ public:
 
     /**
      * Dump the AS3935 register set.
-     * 
+     *
      * @param dump      Dump target, must be able to contain 51 bytes.
      */
     void dump(byte* dump) const;
@@ -336,7 +336,7 @@ private:
     void updateNoiseFloorLevel();
 
     /**
-     * Read the current watchdog treshold from the detector, and update the object's
+     * Read the current watchdog threshold from the detector, and update the object's
      * state accordingly.
      */
     void updateWatchdogThreshold();
