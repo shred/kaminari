@@ -104,7 +104,7 @@ void handleStatus() {
     } else {
         doc["distance"] = (char*) NULL;
     }
-    
+
     doc["energy"] = detector.getEnergy();
     doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
     doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();

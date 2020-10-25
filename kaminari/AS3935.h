@@ -26,11 +26,11 @@ struct Lightning {
 
 /**
  * Driver for an AS3935 Franklin Lightning Detector connected via SPI.
- * 
+ *
  * The driver takes care for automatic adjustment of the noise floor level. If too much
  * noise is detected, the noise floor level is raised automatically. After a while, the
  * noise floor level is lowered again.
- * 
+ *
  * The driver collects the time, energy and distance of up to 64 lightning events. After
  * that, if another lightning is detected, the oldest event is removed.
  *
@@ -62,7 +62,7 @@ public:
     /**
      * Update the detector status. This method should be invoked frequently, e.g. in
      * loop().
-     * 
+     *
      * @return true if something has changed, false if nothing happened
      */
     bool update();
@@ -96,7 +96,7 @@ public:
      *
      * Usually the driver takes care of adjusting the noise floor level automatically,
      * so there is no need to invoke this method.
-     * 
+     *
      * @return true if the level could be raised, false if the upper limit was reached.
      */
     bool raiseNoiseFloorLevel();
@@ -107,7 +107,7 @@ public:
      *
      * Usually the driver takes care of adjusting the noise floor level automatically,
      * so there is no need to invoke this method.
-     * 
+     *
      * @return true if the level could be reduced, false if the lower limit was reached.
      */
     bool reduceNoiseFloorLevel();
@@ -256,7 +256,7 @@ public:
     /**
      * Return one of the last detected lightnings. Lightnings are always returned in
      * descending order, starting from the most recent event.
-     * 
+     *
      * @param index     Index number of lightning detection, starting with 0
      * @param lightning Target structure
      * @return true if the target structure was filled with lightning data, false if
@@ -271,7 +271,7 @@ public:
 
     /**
      * Dump the AS3935 register set.
-     * 
+     *
      * @param dump      Dump target, must be able to contain 51 bytes.
      */
     void dump(byte* dump) const;
