@@ -39,7 +39,7 @@ Optionally, a single **SK6812** RGBW LED can be added as a status LED. It is mus
 
 No other components are required.
 
-To fully understand the functionality of the lightning detector, please read the [AS3935 datasheet](https://ams.com/documents/20143/36005/AS3935_DS000385_1-00.pdf).
+To fully understand the functionality of the lightning detector, please read the [AS3935 datasheet](https://www.sciosense.com/wp-content/uploads/documents/AS3935-Data-Sheet.pdf).
 
 ### Important Notes
 
@@ -253,9 +253,9 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
 
 - **How can I test it?**
 
-  Sadly, there is no better way than waiting for an actual thunderstorm.
+  The manufacturer sells a [demo kit](https://www.sciosense.com/products/wireless-sensor-nodes/demo-kit-for-as3935/) that also contains a "lightning emulator", but the least expensive way is to wait for an actual thunderstorm.
 
-  You can increase sensitivity by reducing `watchdogThreshold` and `spikeRejection`, and then try to simulate lightnings by switching a light switch. I could also simulate lightnings by using a bluetooth mouse close to the sensor.
+  You can also increase sensitivity by reducing `watchdogThreshold` and `spikeRejection`, and then try to simulate lightnings by switching a light switch. I could also simulate lightnings by using a bluetooth mouse or a mobile phone close to the sensor.
 
 - **I get a lot of false lightning events.**
 
