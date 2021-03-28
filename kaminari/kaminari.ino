@@ -22,6 +22,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <Adafruit_NeoPixel.h>
+#include <PubSubClient.h>
 
 #include "AS3935.h"
 #include "Config.h"
@@ -47,9 +48,12 @@ ConfigManager cfgMgr;
 ESP8266WebServer server(PORT);
 AS3935 detector(SPI_CS, AS_INT);
 Adafruit_NeoPixel neopixel(1, NEOPIXEL, NEO_GRBW + NEO_KHZ800);
+WiFiClient wifiClient;
+PubSubClient client(MY_MQTT_SERVER_HOST, MY_MQTT_SERVER_PORT, wifiClient);
 
 unsigned long beforeConnection = millis();
 unsigned long beforeAnimation = millis();
+unsigned long beforeMqttConnection = millis();
 bool connected = false;
 unsigned int currentColor = 0;
 Lightning ledLightning;
@@ -227,6 +231,32 @@ void handleReset() {
     }
 }
 
+void sendMqttStatus() {
+    DynamicJsonDocument doc(8192);
+    String json;
+
+    Lightning lightning;
+    if (detector.getLastLightningDetection(0, lightning)) {
+        doc["energy"] = lightning.energy;
+        if (lightning.distance < 0x3F) {
+            doc["distance"] = lightning.distance;
+        } else {
+            doc["distance"] = (char*) NULL;
+        }
+    } else {
+        doc["energy"] = (char*) NULL;
+        doc["distance"] = (char*) NULL;
+    }
+
+    doc["tuning"] = detector.getFrequency();
+    doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
+    doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
+    doc["watchdogThreshold"] = detector.getWatchdogThreshold();
+
+    serializeJson(doc, json);
+    client.publish(MY_MQTT_TOPIC, json.c_str(), MY_MQTT_RETAIN);
+}
+
 void setupDetector() {
     detector.setOutdoorMode(cfgMgr.config.outdoorMode);
     detector.setWatchdogThreshold(cfgMgr.config.watchdogThreshold);
@@ -367,11 +397,28 @@ void loop() {
     if (connected) {
         server.handleClient();
         MDNS.update();
+
+        #ifdef MY_MQTT_ENABLED
+        if (!client.loop() && timeDifference(now, beforeMqttConnection) > 1000) {
+            beforeMqttConnection = now;
+            if (client.connect("kaminari", MY_MQTT_USER, MY_MQTT_PASSWORD)) {
+                Serial.println("Successfully connected to MQTT server");
+            } else {
+                Serial.print("Connection to MQTT server failed, rc=");
+                Serial.println(client.state());
+            }
+        }
+        #endif
     }
 
     if (detector.update()) {
         if (!detector.getLastLightningDetection(0, ledLightning)) {
             ledLightning.time = 0;
+            #ifdef MY_MQTT_ENABLED
+            if (connected && client.connected()) {
+                sendMqttStatus();
+            }
+            #endif
         }
     }
 

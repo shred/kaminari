@@ -8,6 +8,7 @@ This is an ESP8266 and AS3935 based Franklin Lightning Detector. It connects to 
 
 * Small size and low power consumption
 * Can be read out and configured via HTTP web service and JSON
+* Lightnings can be reported via MQTT
 * Optional RGBW LED for showing the system status and detected lightnings
 * Self-calibrating detector
 * Permanent automatic noise floor level adjustment
@@ -60,6 +61,7 @@ Please make sure these libraries are installed in the Library Manager of the Ard
 * [ArduinoJson](https://arduinojson.org/)
 * [Adafruit NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)
 * [EEPROM_Rotate](https://github.com/xoseperez/eeprom_rotate)
+* [PubSubClient](https://github.com/knolleary/pubsubclient)
 
 ### Configuration
 
@@ -69,6 +71,16 @@ Before you build the project for the first time, please copy the `myWiFi.h.examp
 - `MY_PSK`: The password of your WLAN
 - `MY_APIKEY`: Your API key for endpoint calls that change the state of the detector. You can set a random, password-like word here.
 - `MY_MDNS_NAME`: Your preferred mDNS name. Just use the default value `kaminari` if you don't know what to use here.
+
+To send lightning events via MQTT, these additional options need to be configured:
+
+- `MY_MQTT_ENABLED`: This line needs to be commented in to activate MQTT support. MQTT is disabled by default.
+- `MY_MQTT_SERVER_HOST`: Host name of the MQTT server.
+- `MY_MQTT_SERVER_PORT`: Port of the MQTT server (default is 1883).
+- `MY_MQTT_USER`: MQTT authentication user name
+- `MY_MQTT_PASSWORD`: MQTT authentication password
+- `MY_MQTT_TOPIC`: MQTT topic to be used
+- `MY_MQTT_RETAIN`: `true` if messages shall be retained. Default is `false`.
 
 ### Installation
 
@@ -200,6 +212,30 @@ An optional RGBW LED is showing the current status of the device:
 - **blinking blue**: The maximum noise floor level has been reached. Background noise is too high. You should find a different place for your detector, or enable the outdoor mode. Try to keep it away from electronic devices, especially bluetooth devices, mobile phones or microwaves.
 - **white flash**: A lightning has been detected.
 - **fading red, yellow or green tints**: Indicates the estimated distance (color) and the intensity of the lightning (brightness). Green indicates that the storm is about 40 km away. Red indicates that the storm is overhead. The hue of other colors represent distances between.
+
+## MQTT events
+
+If MQTT support is enabled, Kaminari will publish a message on every detected lightning event. The payload is a JSON structure:
+
+```
+{
+    "energy": 0,
+    "distance": null,
+    "tuning": 500135,
+    "noiseFloorLevel": 146,
+    "disturbersPerMinute": 81,
+    "watchdogThreshold": 1
+}
+```
+
+This is the meaning of the individual properties:
+
+- `energy`: Estimated energy of the detected lightning (no physical unit). May be `null` if a disturber was detected.
+- `distance`: Estimated distance of the lightning, in kilometres. May be `null` if the storm is out of range. `1` means that the storm is overhead.
+- `tuning`: The tuning of the internal antenna, in Hz. Should be around 500 kHz, with a tolerance of ±3.5%.
+- `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises. This value gives a hint about signal quality.
+- `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises. This value gives a hint about signal quality.
+- `watchdogThreshold`: Current watchdog threshold. Range is between 0 and 10. Higher values mean lower sensibility against disturbers, but also lower sensibility against very far lightning events. This value gives a hint about signal quality.
 
 ## Data Recording
 
