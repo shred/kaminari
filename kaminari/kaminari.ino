@@ -254,7 +254,10 @@ void sendMqttStatus() {
     doc["watchdogThreshold"] = detector.getWatchdogThreshold();
 
     serializeJson(doc, json);
-    client.publish(MY_MQTT_TOPIC, json.c_str(), MY_MQTT_RETAIN);
+    if (!client.publish(MY_MQTT_TOPIC, json.c_str(), MY_MQTT_RETAIN)) {
+        Serial.print("Failed to send MQTT message, rc=");
+        Serial.println(client.state());
+    }
 }
 
 void setupDetector() {
