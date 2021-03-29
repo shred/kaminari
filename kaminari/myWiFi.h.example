@@ -37,10 +37,10 @@
 // Port of the MQTT server, usually 1883
 #define MY_MQTT_SERVER_PORT 1883
 
-// User name for MQTT server authentication
+// User name for MQTT server authentication, NULL if no authentication needed
 #define MY_MQTT_USER "kaminari"
 
-// Password for MQTT server authentication
+// Password for MQTT server authentication, NULL if no authentication needed
 #define MY_MQTT_PASSWORD "mYsEcReTmQtTpAsSwOrD"
 
 // MQTT topic to be used
