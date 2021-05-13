@@ -177,36 +177,63 @@ unsigned long AS3935::calibrate(unsigned long freq) {
 
     byte mask = 0x00;
     unsigned long actualFreq;
+    unsigned long bestFreq;
+    byte testMask;
+    byte bestMask;
+    long bestDiff = 1000000;
+    long currentDiff;
     for (int bit = 3; bit >= 0; bit--) {
-        spiWrite(0x08, 0x80 | mask | (1 << bit));
-        counter = 0;
-        delay(1000);
-        actualFreq = counter * 128;
+        testMask = mask | (1 << bit);
+        spiWrite(0x08, 0x80 | testMask);
+        delay(50);             // Let oscillator settle...
+
+        // Measure frequency for 500ms, repeat if not plausible
+        do {
+            counter = 0;
+            delay(500);
+            actualFreq = counter * 128 * 2;
+            currentDiff = actualFreq - freq;
+            if (currentDiff < 0) {
+                currentDiff = -currentDiff;
+            }
+        } while (actualFreq > 0 && currentDiff > 50000);
+
+        // Remember the best frequency and corresponding bit mask
+        if (currentDiff < bestDiff) {
+            bestDiff = currentDiff;
+            bestFreq = actualFreq;
+            bestMask = testMask;
+            if (bestDiff < 500) {
+                break;
+            }
+        }
+
+        // Test the next bit
         if (actualFreq/1000 > freq/1000) {
-            mask |= 1 << bit;
+            mask = testMask;
         }
     }
 
-    if (actualFreq == 0) {
+    if (bestFreq == 0) {
         Serial.println("No interrupt was detected during calibration. Please check your IRQ wiring!");
-    } else if (actualFreq < 483092 || actualFreq > 517500) {
+    } else if (bestFreq < 483092 || bestFreq > 517500) {
         Serial.println("Warning: calibrated frequency is out of tolerance range.");
     }
 
-    this->frequency = actualFreq;
+    this->frequency = bestFreq;
 
-    spiWrite(0x08, mask);           // Set the target frequency, disable DISP_LCO output
+    spiWrite(0x08, bestMask);       // Set the target frequency, disable DISP_LCO output
     delay(50);                      // Let everything settle for a while
     spiWrite(0x3D, 0x96);           // CALIB_RCO: Now calibrate the RCOs
-    spiWrite(0x08, 0x20 | mask);    // Enable TRCO for calibration
+    spiWrite(0x08, 0x20 | bestMask); // Enable TRCO for calibration
     delay(2);                       // Wait another 2 ms
-    spiWrite(0x08, mask);           // Disable TRCO again
+    spiWrite(0x08, bestMask);       // Disable TRCO again
     delay(50);                      // Let everything settle again
     spiRead(0x03);                  // Clear interrupts
     counter = 0;
 
     close();
-    return actualFreq;
+    return bestFreq;
 }
 
 bool AS3935::raiseNoiseFloorLevel() {
