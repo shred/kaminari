@@ -417,12 +417,12 @@ void loop() {
     if (detector.update()) {
         if (!detector.getLastLightningDetection(0, ledLightning)) {
             ledLightning.time = 0;
-            #ifdef MY_MQTT_ENABLED
-            if (connected && client.connected()) {
-                sendMqttStatus();
-            }
-            #endif
         }
+        #ifdef MY_MQTT_ENABLED
+        if (connected && client.connected()) {
+            sendMqttStatus();
+        }
+        #endif
     }
 
     if (timeDifference(now, beforeAnimation) > 50) {
