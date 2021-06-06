@@ -406,7 +406,7 @@ void loop() {
         #ifdef MY_MQTT_ENABLED
         if (!client.loop() && timeDifference(now, beforeMqttConnection) > 1000) {
             beforeMqttConnection = now;
-            if (client.connect("kaminari", MY_MQTT_USER, MY_MQTT_PASSWORD)) {
+            if (client.connect(MY_MQTT_CLIENT_ID, MY_MQTT_USER, MY_MQTT_PASSWORD)) {
                 Serial.println("Successfully connected to MQTT server");
             } else {
                 Serial.print("Connection to MQTT server failed, rc=");
