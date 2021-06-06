@@ -119,7 +119,8 @@ Returns the current status of the detector as JSON structure. This is an example
     "energy": 0,
     "noiseFloorLevel": 146,
     "disturbersPerMinute": 81,
-    "watchdogThreshold": 1
+    "watchdogThreshold": 1,
+    "wifiSignalStrength": -55
 }
 ```
 
@@ -131,6 +132,7 @@ This is the meaning of the individual properties:
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises.
 - `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises.
 - `watchdogThreshold`: Current watchdog threshold. Range is between 0 and 10. Higher values mean lower sensibility against disturbers, but also lower sensibility against very far lightning events.
+- `wifiSignalStrength`: Current WiFi received signal strength, in dBm.
 
 ### `/settings`
 
@@ -224,7 +226,8 @@ If MQTT support is enabled, Kaminari will publish a message on every detected li
     "tuning": 500135,
     "noiseFloorLevel": 146,
     "disturbersPerMinute": 81,
-    "watchdogThreshold": 1
+    "watchdogThreshold": 1,
+    "wifiSignalStrength": -55
 }
 ```
 
@@ -236,6 +239,7 @@ This is the meaning of the individual properties:
 - `noiseFloorLevel`: Current noise floor level, in µVrms. Kaminari raises or lowers the level automatically, depending on the level of environment radio noises. This value gives a hint about signal quality.
 - `disturbersPerMinute`: Number of detected disturbers per minute. The value should be as low as possible for best results. Higher values mean that the detector is receiving a lot of disturbing radio noises. This value gives a hint about signal quality.
 - `watchdogThreshold`: Current watchdog threshold. Range is between 0 and 10. Higher values mean lower sensibility against disturbers, but also lower sensibility against very far lightning events. This value gives a hint about signal quality.
+- `wifiSignalStrength`: Current WiFi received signal strength, in dBm.
 
 ## Data Recording
 

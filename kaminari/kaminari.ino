@@ -113,6 +113,7 @@ void handleStatus() {
     doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
     doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
     doc["watchdogThreshold"] = detector.getWatchdogThreshold();
+    doc["wifiSignalStrength"] = WiFi.RSSI();
 
     sendJsonResponse(doc);
 }
@@ -252,6 +253,7 @@ void sendMqttStatus() {
     doc["noiseFloorLevel"] = detector.getNoiseFloorLevel();
     doc["disturbersPerMinute"] = detector.getDisturbersPerMinute();
     doc["watchdogThreshold"] = detector.getWatchdogThreshold();
+    doc["wifiSignalStrength"] = WiFi.RSSI();
 
     serializeJson(doc, json);
     if (!client.publish(MY_MQTT_TOPIC, json.c_str(), MY_MQTT_RETAIN)) {
