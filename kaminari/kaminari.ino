@@ -51,8 +51,8 @@ AS3935 detector(SPI_CS, AS_INT);
 Adafruit_NeoPixel neopixel(1, NEOPIXEL, NEO_GRBW + NEO_KHZ800);
 WiFiClient wifiClient;
 PubSubClient client(MY_MQTT_SERVER_HOST, MY_MQTT_SERVER_PORT, wifiClient);
+WiFiEventHandler connectedEventHandler, gotIpEventHandler, disconnectedEventHandler;
 
-unsigned long beforeConnection = millis();
 unsigned long beforeAnimation = millis();
 unsigned long beforeMqttConnection = millis();
 bool connected = false;
@@ -353,7 +353,27 @@ void setup() {
     setupDetector();
 
     // Start WiFi
+    WiFi.setSleepMode(WIFI_NONE_SLEEP);
     WiFi.mode(WIFI_STA);
+    connectedEventHandler = WiFi.onStationModeConnected([](const WiFiEventStationModeConnected& event) {
+        Serial.print("WiFi connected to: ");
+        Serial.println(WiFi.SSID());
+        Serial.print("MAC: ");
+        Serial.println(WiFi.macAddress());
+    });
+    gotIpEventHandler = WiFi.onStationModeGotIP([](const WiFiEventStationModeGotIP& event) {
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
+        server.begin();
+        Serial.print("Server is listening on port: ");
+        Serial.println(PORT);
+        connected = true;
+    });
+    disconnectedEventHandler = WiFi.onStationModeDisconnected([](const WiFiEventStationModeDisconnected& event) {
+        connected = false;
+        Serial.println("WiFi connection lost. Reconnecting...");
+        WiFi.begin(MY_SSID, MY_PSK);
+    });
     WiFi.begin(MY_SSID, MY_PSK);
 
     // Start MDNS
@@ -374,28 +394,10 @@ void setup() {
     });
     const char * headerkeys[] = { "X-API-Key" };
     server.collectHeaders(headerkeys, sizeof(headerkeys) / sizeof(char*));
-    server.begin();
-    Serial.print("Server is listening on port ");
-    Serial.println(PORT);
 }
 
 void loop() {
     const unsigned long now = millis();
-
-    if (timeDifference(now, beforeConnection) > 1000) {
-        beforeConnection = now;
-        if (WiFi.status() != WL_CONNECTED) {
-            connected = false;
-        } else if (!connected) {
-            Serial.print("Connected to ");
-            Serial.println(WiFi.SSID());
-            Serial.print("IP address: ");
-            Serial.println(WiFi.localIP());
-            Serial.print("MAC: ");
-            Serial.println(WiFi.macAddress());
-            connected = true;
-        }
-    }
 
     if (connected) {
         server.handleClient();
