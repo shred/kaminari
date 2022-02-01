@@ -38,7 +38,7 @@ void ConfigManager::begin() {
 void ConfigManager::init() {
     config.ledEnabled = true;
     config.blueBrightness = 48;
-    config.watchdogThreshold = 1;
+    config.watchdogThreshold = 2;
     config.minimumNumberOfLightning = 1;
     config.spikeRejection = 2;
     config.outdoorMode = false;
