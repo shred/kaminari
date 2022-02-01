@@ -134,11 +134,14 @@ void handleSettings() {
 
 void handleUpdate() {
     if (authenticated()) {
+        bool needsClearing = false;
+
         if (server.hasArg("watchdogThreshold")) {
             long val = String(server.arg("watchdogThreshold")).toInt();
             if (val >= 0 && val <= 10) {
                 cfgMgr.config.watchdogThreshold = val;
                 detector.setWatchdogThreshold(val);
+                needsClearing = true;
             }
         }
 
@@ -155,6 +158,7 @@ void handleUpdate() {
             if (val >= 0 && val <= 11) {
                 cfgMgr.config.spikeRejection = val;
                 detector.setSpikeRejection(val);
+                needsClearing = true;
             }
         }
 
@@ -162,6 +166,7 @@ void handleUpdate() {
             bool val = String(server.arg("outdoorMode")) == "true";
             cfgMgr.config.outdoorMode = val;
             detector.setOutdoorMode(val);
+            needsClearing = true;
         }
 
         if (server.hasArg("statusLed")) {
@@ -177,6 +182,11 @@ void handleUpdate() {
 
         cfgMgr.commit();
         handleSettings();
+
+        if (needsClearing) {
+            // clear detector statistics after changing the detector config
+            detector.clearStatistics();
+        }
     }
 }
 
