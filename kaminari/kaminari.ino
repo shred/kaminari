@@ -43,6 +43,7 @@
 
 #define DISTANCE_ANIMATION_TIME 5000
 #define ENERGY_ANIMATION_TIME    500
+#define DISTURBER_ANIMATION_TIME 1000
 
 ConfigManager cfgMgr;
 ESP8266WebServer server(PORT);
@@ -129,6 +130,7 @@ void handleSettings() {
     doc["outdoorMode"] = detector.getOutdoorMode();
     doc["statusLed"] = cfgMgr.config.ledEnabled;
     doc["blueBrightness"] = cfgMgr.config.blueBrightness;
+    doc["disturberBrightness"] = cfgMgr.config.disturberBrightness;
     sendJsonResponse(doc);
 }
 
@@ -177,6 +179,13 @@ void handleUpdate() {
             long val = String(server.arg("blueBrightness")).toInt();
             if (val >= 0 && val <= 255) {
                 cfgMgr.config.blueBrightness = val;
+            }
+        }
+
+        if (server.hasArg("disturberBrightness")) {
+            long val = String(server.arg("disturberBrightness")).toInt();
+            if (val >= 0 && val <= 255) {
+                cfgMgr.config.disturberBrightness = val;
             }
         }
 
@@ -304,6 +313,13 @@ void updateColor(unsigned long now) {
                 blue = newblue;
             }
         }
+    }
+
+    // Calculate last disturber fade
+    unsigned long lastDisturber = detector.getLastDisturber();
+    unsigned long disturberDiff = timeDifference(now, lastDisturber);
+    if (cfgMgr.config.disturberBrightness > 0 && lastDisturber != 0 && disturberDiff <= DISTURBER_ANIMATION_TIME) {
+        red = (cfgMgr.config.disturberBrightness * (DISTURBER_ANIMATION_TIME - disturberDiff)) / DISTURBER_ANIMATION_TIME;
     }
 
     color(    (limit(white) & 0xFF) << 24

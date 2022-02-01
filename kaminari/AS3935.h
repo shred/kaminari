@@ -207,6 +207,11 @@ public:
     bool getLastLightningDetection(int index, Lightning& lightning) const;
 
     /**
+     * Return the time of the last detected disturber.
+     */
+    unsigned long getLastDisturber() const;
+
+    /**
      * Clear all detected lightnings.
      */
     void clearDetections();
@@ -230,6 +235,7 @@ private:
     unsigned long lastNoiseLevelChange;
     unsigned long lastNoiseLevelRaise;
     unsigned long disturberCounterStart;
+    unsigned long lastDisturber;
     int noiseLevelBalance;
     int currentNoiseFloorLevel;
     unsigned int disturberCounter;

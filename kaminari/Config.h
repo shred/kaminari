@@ -30,6 +30,7 @@ struct Config {
     int blueBrightness;
     bool ledEnabled;
     bool outdoorMode;
+    int disturberBrightness;
 };
 
 /**

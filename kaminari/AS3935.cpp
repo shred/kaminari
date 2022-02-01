@@ -48,6 +48,7 @@ AS3935::AS3935(int csPin, int intPin) {
     this->noiseFloorLevelOutOfRange = false;
     this->disturberCounterStart = now;
     this->disturberCounter = 0;
+    this->lastDisturber = 0;
 
     clearDetections();
 }
@@ -100,6 +101,7 @@ bool AS3935::update() {
         if ((interrupt & 0x04) != 0) {
             // Disturber detected
             disturberCounter++;
+            this->lastDisturber = now;
         }
 
         if ((interrupt & 0x08) != 0) {
@@ -372,6 +374,10 @@ bool AS3935::getLastLightningDetection(int index, Lightning& lightning) const {
         return true;
     }
     return false;
+}
+
+unsigned long AS3935::getLastDisturber() const {
+    return this->lastDisturber;
 }
 
 void AS3935::clearDetections() {

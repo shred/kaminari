@@ -147,7 +147,8 @@ Returns the current settings of the detector as JSON structure, for example:
     "minimumNumberOfLightning": 1,
     "spikeRejection": 2,
     "statusLed": true,
-    "blueBrightness": 48
+    "blueBrightness": 48,
+    "disturberBrightness": 100
 }
 ```
 
@@ -159,6 +160,7 @@ Returns the current settings of the detector as JSON structure, for example:
 - `spikeRejection`: Current spike rejection, see AS3935 datasheet.
 - `statusLed`: If `true`, the status LED displays signal quality and detected lightnings. If `false`, the status LED will only display important system states (WLAN disconnected, calibration in progress) and is turned off otherwise.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level.
+- `disturberBrightnes`: Brightness of the LED when a disturber is detected.
 
 ### `/update`
 
@@ -169,7 +171,8 @@ This endpoint permits to change the settings. Settings to be changed are passed 
 - `minimumNumberOfLightning`: Minimum number of lightnings until a lightning detected event is triggered. Only 1, 5, 9, and 16 are permitted, other values will be ignored.
 - `spikeRejection`: Spike rejection, between 0 and 11, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `statusLed`: Change the status LED operation.
-- `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings and system states are still indicated.
+- `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings, disturbers, and system states are still indicated.
+- `disturberBrightnes`: Brightness of the LED when a disturber is detected, between 0 and 255. 0 to turn off disturber indication.
 
 The changes are permanently stored and will still be effective after Kaminari had been powered off and on.
 
@@ -205,6 +208,7 @@ An optional RGBW LED is showing the current status of the device:
 - **blinking blue**: The maximum noise floor level has been reached. Background noise is too high. You should find a different place for your detector, or enable the outdoor mode. Try to keep it away from electronic devices, especially bluetooth devices, mobile phones or microwaves.
 - **white flash**: A lightning has been detected.
 - **fading red, yellow or green tints**: Indicates the estimated distance (color) and the intensity of the lightning (brightness). Green indicates that the storm is about 40 km away. Red indicates that the storm is overhead. The hue of other colors represent distances between.
+- **fading pink/red tints** without prior white flash: A disturber has been detected.
 
 ## MQTT events
 
@@ -216,7 +220,7 @@ If MQTT support is enabled, Kaminari will publish a message on every detected li
     "distance": null,
     "tuning": 500135,
     "noiseFloorLevel": 146,
-    "disturbersPerMinute": 81,
+    "disturbersPerMinute": 2,
     "watchdogThreshold": 1,
     "wifiSignalStrength": -55
 }
@@ -263,6 +267,10 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
   The ESP8266 WiFi is a strong disturber. Try to give more space between the WiFi antenna and the detector coil, in order to reduce disturbers.
 
   Lightnings are only detected in a radius of up to 40 km. However, lightnings are poorer detected with increasing distance.
+
+- **I get a lot of disturber indications.**
+
+  Try to find a place with less radio disturbers, and experiment with the `watchdogThreshold` and `spikeRejection` settings. If the disturber indications are annoying you, you can also set `disturberBrightness` to 0.
 
 - **Are kits or assembled devices available?**
 

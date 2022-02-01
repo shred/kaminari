@@ -21,7 +21,7 @@
 #include "Config.h"
 
 #define CHECKSUM_ADDRESS 0xF00
-#define CHECKSUM_VALUE 0x8E
+#define CHECKSUM_VALUE 0x8F
 
 void ConfigManager::begin() {
     EEPROMr.offset(0xFF0);
@@ -38,6 +38,7 @@ void ConfigManager::begin() {
 void ConfigManager::init() {
     config.ledEnabled = true;
     config.blueBrightness = 48;
+    config.disturberBrightness = 100;
     config.watchdogThreshold = 2;
     config.minimumNumberOfLightning = 1;
     config.spikeRejection = 2;
