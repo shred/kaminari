@@ -113,30 +113,6 @@ public:
     bool reduceNoiseFloorLevel();
 
     /**
-     * Raise the watchdog threshold. The detector will be less sensitive to disturbers,
-     * but also less sensitive to lightning events.
-     *
-     * If the auto watchdog threshold mode is activated, the driver takes care of
-     * adjusting the watchdog threshold automatically, so there is no need to invoke this
-     * method.
-     *
-     * @return true if the level could be raised, false if the upper limit was reached.
-     */
-    bool raiseWatchdogThreshold();
-
-    /**
-     * Reduces the watchdog threshold. The detector will be more sensitive to disturbers,
-     * but also more sensitive to lightning events.
-     *
-     * If the auto watchdog threshold mode is activated, the driver takes care of
-     * adjusting the watchdog threshold automatically, so there is no need to invoke this
-     * method.
-     *
-     * @return true if the level could be reduced, false if the lower limit was reached.
-     */
-    bool reduceWatchdogThreshold();
-
-    /**
      * Read the current continuous input noise level, in µVrms.
      */
     int getNoiseFloorLevel();
@@ -166,40 +142,6 @@ public:
      * Set a watchdog threshold. Value must be between 0 and 15. Default is 1.
      */
     void setWatchdogThreshold(int threshold);
-
-    /**
-     * Return the current upper disturber threshold.
-     */
-    unsigned int getUpperDisturberThreshold() const;
-
-    /**
-     * Set the upper disturber threshold. If auto watchdog threshold is enabled, and the
-     * disturber events per minute exceed this upper limit, the watchdog threshold is
-     * raised.
-     */
-    void setUpperDisturberThreshold(unsigned int threshold);
-
-    /**
-     * Return the current lower disturber threshold.
-     */
-    unsigned int getLowerDisturberThreshold() const;
-
-    /**
-     * Set the lower disturber threshold. If auto watchdog threshold is enabled, and the
-     * disturber events per minute go below this lower limit, the watchdog threshold is
-     * reduced.
-     */
-    void setLowerDisturberThreshold(unsigned int threshold);
-
-    /**
-     * Return whether the auto watchdog threshold mode is enabled.
-     */
-    bool isAutoWatchdogMode() const;
-
-    /**
-     * Enable the auto threshold mode.
-     */
-    void setAutoWatchdogMode(bool mode);
 
     /**
      * Clear the statistics of the lightning distance estimation algorithm. Usually there
@@ -288,17 +230,11 @@ private:
     unsigned long lastNoiseLevelChange;
     unsigned long lastNoiseLevelRaise;
     unsigned long disturberCounterStart;
-    unsigned long internalDisturberCounterStart;
     int noiseLevelBalance;
     int currentNoiseFloorLevel;
-    int currentWatchdogThreshold;
     unsigned int disturberCounter;
-    unsigned int internalDisturberCounter;
-    unsigned int lowerDisturberThreshold;
-    unsigned int upperDisturberThreshold;
     bool currentOutdoorMode;
     bool noiseFloorLevelOutOfRange;
-    bool autoWatchdogThreshold;
     Lightning lastLightningDetections[64];
 
     /**
@@ -334,12 +270,6 @@ private:
      * state accordingly.
      */
     void updateNoiseFloorLevel();
-
-    /**
-     * Read the current watchdog threshold from the detector, and update the object's
-     * state accordingly.
-     */
-    void updateWatchdogThreshold();
 
 };
 

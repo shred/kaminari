@@ -21,7 +21,7 @@
 #include "Config.h"
 
 #define CHECKSUM_ADDRESS 0xF00
-#define CHECKSUM_VALUE 0x8D
+#define CHECKSUM_VALUE 0x8E
 
 void ConfigManager::begin() {
     EEPROMr.offset(0xFF0);
@@ -42,9 +42,6 @@ void ConfigManager::init() {
     config.minimumNumberOfLightning = 1;
     config.spikeRejection = 2;
     config.outdoorMode = false;
-    config.upperDisturberThreshold = 100;
-    config.lowerDisturberThreshold = 50;
-    config.autoWatchdogMode = true;
 
     Serial.println("Configuration was initialized.");
     commit();

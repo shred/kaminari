@@ -21,7 +21,6 @@
 #include "AS3935.h"
 
 #define BITRATE 1400000         // max bitrate is 2 MHz, should not be dividable by 500 kHz
-#define INTERNAL_DISTURBER_TIMER     60000  // Timer for internal disturber calculation
 #define NOISE_LEVEL_RAISE_DELAY      60000  // Delay before noise level can be raised again
 #define NOISE_LEVEL_REDUCTION_DELAY 600000  // Delay before noise reduction is lowered again
 
@@ -45,14 +44,10 @@ AS3935::AS3935(int csPin, int intPin) {
     this->lastNoiseLevelRaise = now;
     this->noiseLevelBalance = 0;
     this->currentNoiseFloorLevel = -1;
-    this->currentWatchdogThreshold = -1;
     this->currentOutdoorMode = false;
     this->noiseFloorLevelOutOfRange = false;
     this->disturberCounterStart = now;
     this->disturberCounter = 0;
-    this->internalDisturberCounterStart = now;
-    this->internalDisturberCounter = 0;
-    this->autoWatchdogThreshold = false;
 
     clearDetections();
 }
@@ -105,7 +100,6 @@ bool AS3935::update() {
         if ((interrupt & 0x04) != 0) {
             // Disturber detected
             disturberCounter++;
-            internalDisturberCounter++;
         }
 
         if ((interrupt & 0x08) != 0) {
@@ -133,20 +127,6 @@ bool AS3935::update() {
                 reduceNoiseFloorLevel();
             }
         }
-    }
-
-    // Evaluate disturber frequency
-    if ((now - internalDisturberCounterStart) > INTERNAL_DISTURBER_TIMER) {
-        if (autoWatchdogThreshold && internalDisturberCounter < lowerDisturberThreshold) {
-            reduceWatchdogThreshold();
-        }
-
-        if (autoWatchdogThreshold && internalDisturberCounter > upperDisturberThreshold) {
-            raiseWatchdogThreshold();
-        }
-
-        internalDisturberCounterStart = now;
-        internalDisturberCounter = 0;
     }
 
     return hasChanged;
@@ -266,36 +246,6 @@ bool AS3935::reduceNoiseFloorLevel() {
     return success;
 }
 
-bool AS3935::raiseWatchdogThreshold() {
-    bool success = false;
-    open();
-    byte current = spiRead(0x01);
-    int value = current & 0x0F;
-    value++;
-    if (value <= 10) {
-        spiWrite(0x01, (current & 0xF0) | value);
-        success = true;
-    }
-    updateWatchdogThreshold();
-    close();
-    return success;
-}
-
-bool AS3935::reduceWatchdogThreshold() {
-    bool success = false;
-    open();
-    byte current = spiRead(0x01);
-    int value = current & 0x0F;
-    value--;
-    if (value >= 0) {
-        spiWrite(0x01, (current & 0xF0) | value);
-        success = true;
-    }
-    updateWatchdogThreshold();
-    close();
-    return success;
-}
-
 int AS3935::getNoiseFloorLevel() {
     if (currentNoiseFloorLevel == -1) {
         open();
@@ -321,12 +271,10 @@ void AS3935::setOutdoorMode(bool outdoor) {
 }
 
 int AS3935::getWatchdogThreshold() {
-    if (currentWatchdogThreshold == -1) {
-        open();
-        updateWatchdogThreshold();
-        close();
-    }
-    return currentWatchdogThreshold;
+    open();
+    int current = spiRead(0x01) & 0x0F;
+    close();
+    return current;
 }
 
 void AS3935::setWatchdogThreshold(int threshold) {
@@ -335,31 +283,6 @@ void AS3935::setWatchdogThreshold(int threshold) {
     current = (current & 0xF0) | (threshold & 0x0F);
     spiWrite(0x01, current);
     close();
-    currentWatchdogThreshold = threshold;
-}
-
-unsigned int AS3935::getUpperDisturberThreshold() const {
-    return upperDisturberThreshold;
-}
-
-void AS3935::setUpperDisturberThreshold(unsigned int threshold) {
-    upperDisturberThreshold = threshold;
-}
-
-unsigned int AS3935::getLowerDisturberThreshold() const {
-    return lowerDisturberThreshold;
-}
-
-void AS3935::setLowerDisturberThreshold(unsigned int threshold) {
-    lowerDisturberThreshold = threshold;
-}
-
-bool AS3935::isAutoWatchdogMode() const {
-    return autoWatchdogThreshold;
-}
-
-void AS3935::setAutoWatchdogMode(bool mode) {
-    autoWatchdogThreshold = mode;
 }
 
 void AS3935::clearStatistics() {
@@ -511,8 +434,4 @@ void AS3935::updateNoiseFloorLevel() {
     int level = (spiRead(0x01) >> 4) & 0x07;
     currentOutdoorMode = spiRead(0x00) == 0x1C;
     currentNoiseFloorLevel = currentOutdoorMode ? outdoorLevels[level] : indoorLevels[level];
-}
-
-void AS3935::updateWatchdogThreshold() {
-    currentWatchdogThreshold = spiRead(0x01) & 0x0F;
 }
