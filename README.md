@@ -160,7 +160,7 @@ Returns the current settings of the detector as JSON structure, for example:
 - `spikeRejection`: Current spike rejection, see AS3935 datasheet.
 - `statusLed`: If `true`, the status LED displays signal quality and detected lightnings. If `false`, the status LED will only display important system states (WLAN disconnected, calibration in progress) and is turned off otherwise.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level.
-- `disturberBrightnes`: Brightness of the LED when a disturber is detected.
+- `disturberBrightness`: Brightness of the LED when a disturber is detected.
 
 ### `/update`
 
@@ -172,7 +172,7 @@ This endpoint permits to change the settings. Settings to be changed are passed 
 - `spikeRejection`: Spike rejection, between 0 and 11, see AS3935 datasheet. Higher numbers give better robustness against disturber signals, but a lower lightning detection rate.
 - `statusLed`: Change the status LED operation.
 - `blueBrightness`: Maximum brightness of the blue LED indicating the noise floor level, between 0 and 255. 0 turns the constant blue light off, while lightnings, disturbers, and system states are still indicated.
-- `disturberBrightnes`: Brightness of the LED when a disturber is detected, between 0 and 255. 0 to turn off disturber indication.
+- `disturberBrightness`: Brightness of the LED when a disturber is detected, between 0 and 255. 0 to turn off disturber indication.
 
 The changes are permanently stored and will still be effective after Kaminari had been powered off and on.
 
@@ -271,6 +271,10 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
 - **I get a lot of disturber indications.**
 
   Try to find a place with less radio disturbers, and experiment with the `watchdogThreshold` and `spikeRejection` settings. If the disturber indications are annoying you, you can also set `disturberBrightness` to 0.
+
+- **I'd to write my own lightning detector firmware.**
+
+  The `AS3935.cpp` and `AS3935.h` files in this project provide a generic driver class for the AS3935 sensor chip. You can use it in your own project, as long as you won't remove the copyright header and respect the terms of our license.
 
 - **Are kits or assembled devices available?**
 
