@@ -91,10 +91,10 @@ bool AS3935::update() {
                 noiseLevelBalance--;
                 if (raiseNoiseFloorLevel()) {
                     noiseFloorLevelOutOfRange = false;
+                    hasChanged = true;
                 } else {
                     noiseFloorLevelOutOfRange = true;
                 }
-                hasChanged = true;
             }
         }
 
@@ -122,11 +122,11 @@ bool AS3935::update() {
         noiseLevelBalance--;
         if (noiseLevelBalance < -1) {
             noiseLevelBalance++;
-            hasChanged = true;
             if (noiseFloorLevelOutOfRange) {
                 noiseFloorLevelOutOfRange = false;
             } else {
                 reduceNoiseFloorLevel();
+                hasChanged = true;
             }
         }
     }
