@@ -51,17 +51,18 @@ To fully understand the functionality of the lightning detector, please read the
 
 ### Firmware
 
-To build the firmware, you need to install the [Arduino IDE](https://www.arduino.cc/en/Main/Software). After installation, just open the `kaminari.ino` file.
+To build the firmware, install [PlatformIO](https://platformio.org), and then clone this repository.
 
 ### Dependencies
 
-Please make sure these libraries are installed in the Library Manager of the Arduino IDE:
+Install these PlatformIO libraries in the repository:
 
-* [Arduino on ESP8266](https://github.com/esp8266/Arduino) (via Board Manager)
-* [ArduinoJson](https://arduinojson.org/)
-* [Adafruit NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)
-* [EEPROM_Rotate](https://github.com/xoseperez/eeprom_rotate)
-* [PubSubClient](https://github.com/knolleary/pubsubclient)
+* [Arduino on ESP8266](https://github.com/esp8266/Arduino) (already done with `platformio init --board huzzah`, use another board value for other boards)
+
+* [ArduinoJson](https://arduinojson.org/) (with `platformio lib install 64`)
+* [Adafruit NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel) (with `platformio lib install 28`)
+* [EEPROM_Rotate](https://github.com/xoseperez/eeprom_rotate) (with `platformio lib install 5456`)
+* [PubSubClient](https://github.com/knolleary/pubsubclient) (with `platformio lib install knolleary/PubSubClient`)
 
 ### Configuration
 
@@ -84,13 +85,17 @@ To send lightning events via MQTT, these additional options need to be configure
 
 ### Installation
 
-Now you can build the project in ArduinoIDE.
+Now you can build the project in PlatformIO.
 
-After that, connect your ESP8266 via USB. In the _Tools_ menu, please set all parameters so you can upload the sketch to your ESP8266. The settings depend on the brand of your module and on your computer's operating system, so there are no generic settings that can be recommended here.
+Connect your ESP8266 via USB. 
 
-When everything is completed, upload the sketch to your module. That's all.
+Build and upload the sketch to your module. That's all.
 
-You can open the _Serial Monitor_ to read some debug output of Kaminari as it starts up. You will find the WiFi status, the IP address, and the calibration results there.
+```
+platformio run --target upload
+```
+
+You can open a _Serial Monitor_ at 115200 baud to read some debug output of Kaminari as it starts up. You will find the WiFi status, the IP address, and the calibration results there.
 
 ### Connection
 
