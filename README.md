@@ -282,8 +282,8 @@ You can frequently poll the `/status` endpoint for lightnings and other sensor v
 
 ## Contribute
 
-* Fork the [Source code at GitHub](https://github.com/shred/kaminari). Feel free to send pull requests.
-* Found a bug? [File a bug report!](https://github.com/shred/kaminari/issues) However, please don't file complaints about a poor accuracy or false detections. Remember that this is a toy and not a professional lightning detector.
+* Fork the [Source code at Codeberg](https://codeberg.org/shred/kaminari). Feel free to send pull requests.
+* Found a bug? [File a bug report!](https://codeberg.org/shred/kaminari/issues) However, please don't file complaints about a poor accuracy or false detections. Remember that this is a toy and not a professional lightning detector.
 
 ## License
 
